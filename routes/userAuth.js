@@ -2,7 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-const User = require("../models").User; // Replace with the path to your User model
+const { User, Role, RoleUser } = require('../models');
 
 const { v4: uuidv4 } = require("uuid");
 const moment = require("moment");
@@ -86,6 +86,8 @@ router.post("/signup", async (req, res) => {
       is_verified: moment().format("YYYY-MM-DD HH:mm:ss"),
       is_active: false,
     });
+
+    await RoleUser.create({ userId: newUser.id, roleId: 1});
 
     const tokenPayload = {
       email: newUser.email,

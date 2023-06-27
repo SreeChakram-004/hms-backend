@@ -1,7 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const { googleAuth, jwtSecret } = require('./auth');
-const User = require('../models').User;
+const { User, RoleUser } = require('../models');
 
 const moment = require('moment');
 const {v4 : uuidv4} = require('uuid');
@@ -20,7 +20,8 @@ passport.use(
 
         if (!user) {
           // If the user doesn't exist, create a new user in the database
-          user = await User.create({ userName:profile.given_name,password:hashedPassword, googleId: profile.id, email: profile.email,uuid:userId,is_verified:moment().format("MM-DD-YYYY hh:mm:ss"),is_active: 0});
+          let user = await User.create({ userName:profile.given_name,password:hashedPassword, googleId: profile.id, email: profile.email,uuid:userId,is_verified:moment().format("MM-DD-YYYY hh:mm:ss"),is_active: 0});
+          let roleUser = await RoleUser.create({ userId: user.id, roleId: 1});
         }
 
         return done(null, user);
