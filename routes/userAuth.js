@@ -11,7 +11,11 @@ const salt = bcrypt.genSaltSync(10);
 
 const validator = require("email-validator");
 
+
 const router = express.Router();
+
+const verifyUser = require("../middlewares/verifyUser");
+
 
 // Login endpoint
 // router.post("/login", async (req, res) => {
@@ -249,6 +253,35 @@ router.post("/forgot-password", async (req, res) => {
       res.status(500).json({ message: 'Server Error' });
     }
   });
+
+  router.get("/profile", verifyUser, async (req, res) => {
+    try {
+      // Access the user ID from the middleware
+      const email = req.email;
+  
+      // Fetch the user's data
+      const user = await User.findOne({
+        where: { email },
+        attributes: { exclude: ["password"] },
+        include: [{ model: Role, through: { attributes: [] } }],
+      });
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Access the roles from user.Roles
+      const roles = user.Roles;
+  
+      res.json({ status: true, user, roles });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server Error" });
+    }
+  });
+  
+  
+  
 
   
   
