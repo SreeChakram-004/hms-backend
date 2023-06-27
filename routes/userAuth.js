@@ -14,6 +14,54 @@ const validator = require("email-validator");
 const router = express.Router();
 
 // Login endpoint
+// router.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     const user = await User.findOne({ where: { email }});
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     } else if (user.googleId) {
+//       return res.status(200).json({
+//         message: "Access denied, user logged in with another authentication method",
+//       });
+//     }
+
+//     // const passwordIsValid = await user.comparePassword(password);
+//     const hashedPassword = await bcrypt.hash(password, salt);
+//     const passwordIsValid = await bcrypt.compare(hashedPassword, user.password);
+
+//     if (!passwordIsValid) {
+//       return res.status(401).json({ message: "Invalid password" });
+//     }
+
+//     const tokenPayload = {
+//       email: user.email,
+//       password: password
+//       // Add any additional data you want to include in the token
+//     };
+
+//     const accessToken = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "7d" });
+//     const refreshToken = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "7d" });
+
+//     res.json({
+//       status: true,
+//       data: {
+//         token_type: "Bearer",
+//         expires_in: "7d",
+//         access_token: accessToken,
+//         refresh_token: refreshToken,
+//       },
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// });
+
+// Login endpoint
+// Login endpoint
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -28,9 +76,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // const passwordIsValid = await user.comparePassword(password);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const passwordIsValid = await bcrypt.compare(hashedPassword, user.password);
+    const passwordIsValid = await bcrypt.compare(password, user.password);
 
     if (!passwordIsValid) {
       return res.status(401).json({ message: "Invalid password" });
@@ -59,9 +105,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
+
+
 // Signup endpoint
 router.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
+  const { hotel_name,email, password } = req.body;
 
   try {
     const validateEmail = validator.validate(email);
@@ -77,11 +125,12 @@ router.post("/signup", async (req, res) => {
       return res.status(409).json({ message: "Email already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = await User.create({
+      hotel_name: hotel_name,
       email: email,
-      password: hashedPassword,
+      password: password,
       uuid: uuidv4(),
       is_verified: moment().format("YYYY-MM-DD HH:mm:ss"),
       is_active: false,
@@ -91,6 +140,7 @@ router.post("/signup", async (req, res) => {
 
     const tokenPayload = {
       email: newUser.email,
+      password: password
       // Add any additional data you want to include in the token
     };
 
@@ -113,43 +163,69 @@ router.post("/signup", async (req, res) => {
 });
 
 
+
+
 router.post("/forgot-password", async (req, res) => {
-    const { email, favourite_book, favourite_pet, password } = req.body;
-    
-    try {
-      const user = await User.findOne({
-        where: {
-          email,
-          favourite_book,
-          favourite_pet
-        },
+  const { email, favourite_pet, favourite_book, password } = req.body;
+
+  try {
+    const user = await User.findOne({
+      where: {
+        email,
+        favourite_pet,
+        favourite_book,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    } else if (user.googleId) {
+      return res.status(200).json({
+        message: "Access denied, user logged in with another authentication method",
       });
+    } else if (user) {
+
+      await User.update({ password: password }, { where: { id: user.id } });
+
+
+      res.json({ status: true, message: 'password updated successfully' });
+      // user.password = hashedPassword;
+      // await user.save();
+
+      // const tokenPayload = {
+      //   email: user.email,
+      //   password: password
+      //   // Add any additional data you want to include in the token
+      // };
+
+      // const accessToken = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "7d" });
+      // const refreshToken = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "7d" });
   
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      } else if (user.googleId) {
-        return res.status(200).json({
-          message: 'Access denied, user logged in with another authentication method',
-        });
-      } else {
-        const hashedPassword = await bcrypt.hash(password, salt);
-        user.password = hashedPassword;
-        await user.save();
-  
-        res.json({ status: true, message: 'Password updated successfully' });
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server Error' });
+      // res.json({
+      //   status: true,
+      //   data: {
+      //     token_type: "Bearer",
+      //     expires_in: "7d",
+      //     access_token: accessToken,
+      //     refresh_token: refreshToken,
+      //   },
+      // });
     }
-  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
+
 
   router.post('/user/:id', async (req, res) => {
-    const userId = req.params.id;
-    const { hotel_name,userName,email, favoriteBook, favoritePet, phoneNo } = req.body;
+    const id = req.params.id;
+    const { hotel_name,userName,email, favourite_book, favourite_pet, phoneNo } = req.body;
   
     try {
-      const user = await User.findByPk(userId);
+      const user = await User.findByPk(id);
   
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
@@ -160,8 +236,8 @@ router.post("/forgot-password", async (req, res) => {
       user.userName = userName;
       user.email = email;
       user.phoneNo = phoneNo;
-      user.favoriteBook = favoriteBook;
-      user.favoritePet = favoritePet;
+      user.favourite_book = favourite_book;
+      user.favourite_pet = favourite_pet;
       user.is_active = 1;
   
       // Save the updated user to the database
@@ -173,6 +249,8 @@ router.post("/forgot-password", async (req, res) => {
       res.status(500).json({ message: 'Server Error' });
     }
   });
+
+  
   
   
 module.exports = router;
