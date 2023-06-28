@@ -10,6 +10,9 @@ const session = require('express-session');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/userAuth');
+var apiRouter = require('./routes/userApi');
+var departmentRouter = require('./routes/departmentApi');
+var dashboardRouter = require('./routes/api');
 require('./config/passport'); // Initialize Passport configuration
 
 var app = express();
@@ -27,6 +30,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/v1/user', apiRouter);
+app.use('/v1/department', departmentRouter);
+app.use('/v1/dashboard', dashboardRouter);
 
 // Session middleware
 app.use(

@@ -224,7 +224,7 @@ router.post("/forgot-password", async (req, res) => {
 
 
 
-  router.post('/user/:id', async (req, res) => {
+  router.post('/user/:id', verifyUser, async (req, res) => {
     const id = req.params.id;
     const { hotel_name,userName,email, favourite_book, favourite_pet, phoneNo } = req.body;
   
@@ -257,12 +257,12 @@ router.post("/forgot-password", async (req, res) => {
   router.get("/profile", verifyUser, async (req, res) => {
     try {
       // Access the user ID from the middleware
-      const email = req.email;
+      const email = req.user.email;
   
       // Fetch the user's data
       const user = await User.findOne({
         where: { email },
-        attributes: { exclude: ["password"] },
+        attributes: { exclude: ["password","favourite_pet","favorite_book"] },
         include: [{ model: Role, through: { attributes: [] } }],
       });
   
@@ -273,7 +273,7 @@ router.post("/forgot-password", async (req, res) => {
       // Access the roles from user.Roles
       const roles = user.Roles;
   
-      res.json({ status: true, user, roles });
+      res.json({ status: true, user});
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Server Error" });

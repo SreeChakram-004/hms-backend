@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../config/auth");
+const {User,Role} = require("../models");
 
-const verifyUser = (req, res, next) => {
+const verifyUser = async (req, res, next) => {
   const token = req.headers.authorization;
 
   if (!token) {
@@ -15,7 +16,16 @@ const verifyUser = (req, res, next) => {
     console.log(email);
 
     // Attach the user ID to the request object
-    req.email = email;
+    // req.email = email;
+
+    const user = await User.findOne({
+      where: { email },
+      attributes: { exclude: ["password","favourite_pet","favorite_book"] },
+    });
+
+    console.log(user);
+
+    req.user = user;
 
     next();
   } catch (error) {

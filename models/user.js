@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // Define associations here
       User.belongsToMany(models.Role, { through: models.RoleUser });
+      // User.belongsToMany(models.Department, { through: models.DepartmentUsers });
+      User.belongsToMany(models.Department, { through: models.DepartmentUser });
     }
   }
 
