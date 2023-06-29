@@ -18,7 +18,11 @@ module.exports = {
       },
       hotel_name: {
         type: Sequelize.STRING,
+        unique:true,
         allowNull: true,
+        validate: {
+          is: /^[^\s]+$/,
+        },
       },
       userName: {
         type: Sequelize.STRING,
