@@ -22,15 +22,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       userName: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
-      hotel_name: {
-        type: DataTypes.STRING,
         unique:true,
         allowNull: true,
         validate: {
           is: /^[^\s]+$/,
         },
+      },
+      userName: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       email: {
         type: DataTypes.STRING,

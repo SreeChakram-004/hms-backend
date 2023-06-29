@@ -15,15 +15,17 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         // Check if the user already exists in the database
-        const hashedPassword = await bcrypt.hash('password', salt);
+        // const hashedPassword = await bcrypt.hash('password', salt);
         let user = await User.findOne({ where: { googleId: profile.id } });
+        let existingUser = await User.findOne({ where: {email: profile.email } });
 
-        if (!user) {
+
+         if (!user) {
           // If the user doesn't exist, create a new user in the database
-          let user = await User.create({ userName:profile.given_name,password:hashedPassword, googleId: profile.id, email: profile.email,uuid:userId,is_verified:moment().format("MM-DD-YYYY hh:mm:ss"),is_active: 0});
+          let user = await User.create({ hotel_name:"HotelOne",userName:profile.given_name,password:"password", googleId: profile.id, email: profile.email,uuid:userId,is_verified:moment().format("MM-DD-YYYY hh:mm:ss"),is_active: 0});
           let roleUser = await RoleUser.create({ userId: user.id, roleId: 1});
+          return done(null, user);
         }
-
         return done(null, user);
       } catch (error) {
         return done(error);
