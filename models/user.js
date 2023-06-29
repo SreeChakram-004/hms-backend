@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: DataTypes.UUIDV4,
       },
-      userName: {
+      hotel_name: {
         type: DataTypes.STRING,
         unique:true,
         allowNull: true,

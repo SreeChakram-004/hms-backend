@@ -88,6 +88,7 @@ router.post("/login", async (req, res) => {
 
     const tokenPayload = {
       email: user.email,
+      password: password
       // Add any additional data you want to include in the token
     };
 
@@ -188,32 +189,27 @@ router.post("/forgot-password", async (req, res) => {
         message: "Access denied, user logged in with another authentication method",
       });
     } else if (user) {
+      user.password = password;
+      await user.save();
 
-      await User.update({ password: password }, { where: { id: user.id } });
+      const tokenPayload = {
+        email: user.email,
+        password: password
+        // Add any additional data you want to include in the token
+      };
 
-
-      res.json({ status: true, message: 'password updated successfully' });
-      // user.password = hashedPassword;
-      // await user.save();
-
-      // const tokenPayload = {
-      //   email: user.email,
-      //   password: password
-      //   // Add any additional data you want to include in the token
-      // };
-
-      // const accessToken = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "7d" });
-      // const refreshToken = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "7d" });
+      const accessToken = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "7d" });
+      const refreshToken = jwt.sign(tokenPayload, jwtSecret, { expiresIn: "7d" });
   
-      // res.json({
-      //   status: true,
-      //   data: {
-      //     token_type: "Bearer",
-      //     expires_in: "7d",
-      //     access_token: accessToken,
-      //     refresh_token: refreshToken,
-      //   },
-      // });
+      res.json({
+        status: true,
+        data: {
+          token_type: "Bearer",
+          expires_in: "7d",
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        },
+      });
     }
   } catch (error) {
     console.error(error);
