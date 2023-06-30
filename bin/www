@@ -88,7 +88,7 @@ function onListening() {
     : 'port ' + addr.port;
 
   // Get the base URL for the application
-  var baseUrl = getBaseUrl();
+  var baseUrl = 'https://wild-red-clownfish-tam.cyclic.app'
 
   debug('Listening on ' + baseUrl);
 }
