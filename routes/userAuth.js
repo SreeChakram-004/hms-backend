@@ -110,7 +110,7 @@ router.post("/signup", async (req, res) => {
       email: email,
       password: hashedPassword,
       uuid: uuidv4(),
-      is_verified: moment().format("DD-MM-YYYY hh:mm:ss")
+      is_verified: moment().format("YYYY-MM-DD hh:mm:ss")
     });
 
     await RoleUser.create({ userId: newUser.id, roleId: 1 });

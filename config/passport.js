@@ -26,7 +26,7 @@ passport.use(
               email: profile.email,
               password: hashedPassword,
               googleId: profile.id,
-              is_verified: moment().format("DD-MM-YYYY hh:mm:ss"),
+              is_verified: moment().format("YYYY-MM-DD hh:mm:ss"),
               is_active: 0,
               uuid: uuidv4()
             });
