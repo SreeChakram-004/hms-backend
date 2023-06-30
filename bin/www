@@ -86,5 +86,23 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
+
+  // Get the base URL for the application
+  var baseUrl = getBaseUrl();
+
   debug('Listening on ' + bind);
+
+  if (baseUrl) {
+    debug('Deployment URL: ' + baseUrl);
+  }
+}
+
+function getBaseUrl() {
+  var isLocalhost = process.env.NODE_ENV === 'development';
+  if (isLocalhost) {
+    return 'http://localhost:' + port;
+  } else {
+    // Replace with your deployment URL
+    return 'https://wild-red-clownfish-tam.cyclic.app';
+  }
 }
