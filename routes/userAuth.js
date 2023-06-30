@@ -198,6 +198,7 @@ router.post('/user/:id',verifyUser, async (req, res) => {
     user.phoneNo = phoneNo;
     user.favourite_book = favourite_book;
     user.favourite_pet = favourite_pet;
+    user.is_active = 1;
 
     // Save the updated user to the database
     await user.save();
