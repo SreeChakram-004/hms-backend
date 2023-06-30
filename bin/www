@@ -9,13 +9,6 @@ var debug = require('debug')('hms-backend:server');
 var http = require('http');
 
 /**
- * Get port from environment and store in Express.
- */
-
-var port = normalizePort(process.env.PORT || '8000');
-app.set('port', port);
-
-/**
  * Create HTTP server.
  */
 
@@ -25,29 +18,9 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen();
 server.on('error', onError);
 server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
 
 /**
  * Event listener for HTTP server "error" event.
@@ -58,9 +31,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = '';
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -90,5 +61,8 @@ function onListening() {
   // Get the base URL for the application
   var baseUrl = 'https://wild-red-clownfish-tam.cyclic.app'; // Replace with your deployment URL
 
-  debug('Listening on ' + baseUrl);
+  // Replace 'localhost' with the deployment URL
+  bind = bind.replace('localhost', baseUrl);
+
+  debug('Listening on ' + bind);
 }
