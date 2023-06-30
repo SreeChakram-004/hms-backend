@@ -1,14 +1,11 @@
-const bcrypt = require('bcrypt');
-const salt = bcrypt.genSaltSync(10);
 'use strict';
-const { Model } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class User extends Model {
     static associate(models) {
-      // Define associations here
       User.belongsToMany(models.Role, { through: models.RoleUser });
-      // User.belongsToMany(models.Department, { through: models.DepartmentUsers });
       User.belongsToMany(models.Department, { through: models.DepartmentUser });
     }
   }
@@ -22,11 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       hotel_name: {
         type: DataTypes.STRING,
-        unique:true,
         allowNull: true,
-        validate: {
-          is: /^[^\s]+$/,
-        },
       },
       userName: {
         type: DataTypes.STRING,
@@ -75,14 +68,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'User',
-      hooks: {
-        beforeCreate: async (user) => {
-          if (user.password) {
-            const hashedPassword = await bcrypt.hash(user.password, salt);
-            user.password = hashedPassword;
-          }
-        },
-      },
     }
   );
 

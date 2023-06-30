@@ -34,7 +34,6 @@ router.post("/create", verifyUser, async (req, res) => {
       attributes: { exclude: ["password", "favourite_pet", "favorite_book"] },
       include: [{ model: Role, through: { attributes: [] } }],
     });
-    console.log(user.dataValues.id, "kjdsbcfksdj");
 
     if (
       user.dataValues.Roles[0].dataValues.id === 1 ||
@@ -48,6 +47,7 @@ router.post("/create", verifyUser, async (req, res) => {
 
       const newDepartment = await Department.create({
         name: name,
+        created_by_id: user.id
       });
 
       const newDepartmentUser = await DepartmentUser.create({
@@ -77,16 +77,24 @@ router.post("/create", verifyUser, async (req, res) => {
 });
 
 
+
 router.get("/all", verifyUser, async (req, res) => {
   try {
     // Check if the logged-in user has the necessary access rights
+    const userEmail = req.user.email;
+    const user = await User.findOne({
+      where: { email: userEmail },
+      attributes: { exclude: ["password", "favourite_pet", "favorite_book"] },
+      include: [{ model: Role, through: { attributes: [] } }],
+    });
+
     const { departmentName, page, limit } = req.query;
 
     const departmentOptions = {
-      include: [{ model: User, through: { attributes: [] } }],
-      where: { name: { [Op.like]: `%${departmentName || ""}%` } },
+      include: [{ model: User, through: { attributes: [] },where: { hotel_name: { [Op.eq]: user.hotel_name } } }],
       order: [["createdAt", "DESC"]],
     };
+    
 
     const totalCount = await Department.count(departmentOptions);
 
@@ -115,6 +123,7 @@ router.get("/all", verifyUser, async (req, res) => {
     });
   }
 });
+
 
 router.get("/filter", verifyUser, async (req, res) => {
   try {
@@ -158,7 +167,7 @@ router.post("/update/:departmentId", verifyUser, async (req, res) => {
         return res.status(404).json({ message: "Department not found" });
       }
 
-      const updatedDepartment = await department.update({ name });
+      const updatedDepartment = await department.update({ name ,updated_by_id:user.id});
 
       res.json({
         status: true,

@@ -20,9 +20,6 @@ module.exports = {
         type: Sequelize.STRING,
         unique:true,
         allowNull: true,
-        validate: {
-          is: /^[^\s]+$/,
-        },
       },
       userName: {
         type: Sequelize.STRING,

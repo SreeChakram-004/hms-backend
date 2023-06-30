@@ -49,9 +49,20 @@ app.use(passport.session());
 
 // Google OAuth login route
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+// router.get("/auth/google",
+//   // (req, res, next) => {
+//   //   req.session.google_oauth2_state = Math.random().toString(36).substring(2);
+//   //   next();
+//   // },
+//   passport.authenticate("google", {
+//     scope: ["email", "profile"],
+//     prompt: "select_account",
+//     state: req.session.google_oauth2_state,
+//   })
+// );
 
 // Google OAuth callback route
-app.get('/auth/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
+app.get('/auth/google/callback', passport.authenticate('google',{ session: false }), (req, res) => {
   // Generate JWT token
   const accessToken = jwt.sign({ email: req.user.email, password: 'password' }, jwtSecret, { expiresIn: '7d' });
   const refreshToken = jwt.sign({ email: req.user.email, password: 'password' }, jwtSecret, { expiresIn: '7d' });

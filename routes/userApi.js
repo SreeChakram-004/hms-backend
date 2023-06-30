@@ -61,7 +61,7 @@ router.post("/create", verifyUser, async (req, res) => {
       is_active: is_active,
       password: password,
       uuid: uuidv4(),
-      is_verified: moment().format("YYYY-MM-DD HH:mm:ss"),
+      is_verified: moment().format("DD-MM-YYYY hh:mm:ss"),
       is_active: false,
     });
 
