@@ -43,7 +43,7 @@ router.post("/create", verifyUser, async (req, res) => {
     }
 
     const validateEmail = validator.validate(email);
-    console.log(validateEmail);
+    (validateEmail);
 
     if (!validateEmail) {
       return res.status(400).json({ message: "Invalid email address" });
