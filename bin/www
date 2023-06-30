@@ -84,12 +84,12 @@ function onListening() {
  * Determine the URL based on the environment.
  */
 function getBaseUrl() {
-  var isLocalhost = process.env.NODE_ENV === 'development';
-  if (isLocalhost) {
-    return 'http://localhost:' + port;
-  } else {
+  // var isLocalhost = process.env.NODE_ENV === 'development';
+  // if (isLocalhost) {
+  //   return 'http://localhost:' + port;
+  // } else {
     return 'https://wild-red-clownfish-tam.cyclic.app'; // Replace with your deployment URL
-  }
+  // }
 }
 
 // Set the base URL in the app.locals object
