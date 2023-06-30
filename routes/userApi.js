@@ -75,7 +75,16 @@ router.post("/create", verifyUser, async (req, res) => {
       user: newUser,
     });
   } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    if (err.details) {
+      return res
+        .status(400)
+        .send({ status: false, message: err.details[0].message });
+    } else {
+      return res.status(500).send({
+        status: false,
+        message: err.message ? err.message : "Internal Server Error.",
+      });
+    }
   }
 });
 
@@ -129,10 +138,16 @@ router.get("/all", verifyUser, async (req, res) => {
       currentPage: pageNumber,
     });
   } catch (err) {
-    return res.status(500).send({
-      status: false,
-      message: err.message ? err.message : "Internal Server Error.",
-    });
+    if (err.details) {
+      return res
+        .status(400)
+        .send({ status: false, message: err.details[0].message });
+    } else {
+      return res.status(500).send({
+        status: false,
+        message: err.message ? err.message : "Internal Server Error.",
+      });
+    }
   }
 });
 
@@ -192,8 +207,16 @@ router.post("/update/:userId", verifyUser, async (req, res) => {
       message: "Records updated successfully",
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    if (err.details) {
+      return res
+        .status(400)
+        .send({ status: false, message: err.details[0].message });
+    } else {
+      return res.status(500).send({
+        status: false,
+        message: err.message ? err.message : "Internal Server Error.",
+      });
+    }
   }
 });
 
@@ -216,7 +239,16 @@ router.post("/delete/:userId", verifyUser, async (req, res) => {
         message: "Record deleted successfully",
       });
     } catch (error) {
-      res.status(500).json({ message: "Server Error" });
+      if (err.details) {
+        return res
+          .status(400)
+          .send({ status: false, message: err.details[0].message });
+      } else {
+        return res.status(500).send({
+          status: false,
+          message: err.message ? err.message : "Internal Server Error.",
+        });
+      }
     }
 });
   

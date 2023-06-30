@@ -117,11 +117,18 @@ router.get("/all", verifyUser, async (req, res) => {
       currentPage: pageNumber,
     });
   } catch (err) {
-    return res.status(500).send({
-      status: false,
-      message: err.message ? err.message : "Internal Server Error.",
-    });
+    if (err.details) {
+      return res
+        .status(400)
+        .send({ status: false, message: err.details[0].message });
+    } else {
+      return res.status(500).send({
+        status: false,
+        message: err.message ? err.message : "Internal Server Error.",
+      });
+    }
   }
+
 });
 
 
@@ -137,10 +144,16 @@ router.get("/filter", verifyUser, async (req, res) => {
       departments,
     });
   } catch (err) {
-    return res.status(500).send({
-      status: false,
-      message: err.message ? err.message : "Internal Server Error.",
-    });
+    if (err.details) {
+      return res
+        .status(400)
+        .send({ status: false, message: err.details[0].message });
+    } else {
+      return res.status(500).send({
+        status: false,
+        message: err.message ? err.message : "Internal Server Error.",
+      });
+    }
   }
 });
 
@@ -223,10 +236,16 @@ router.post("/delete/:departmentId", verifyUser, async (req, res) => {
       return res.status(501).json({ message: "Invalid Access" });
     }
   } catch (err) {
-    return res.status(500).send({
-      status: false,
-      message: err.message ? err.message : "Internal Server Error.",
-    });
+    if (err.details) {
+      return res
+        .status(400)
+        .send({ status: false, message: err.details[0].message });
+    } else {
+      return res.status(500).send({
+        status: false,
+        message: err.message ? err.message : "Internal Server Error.",
+      });
+    }
   }
 });
 
