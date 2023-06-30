@@ -88,16 +88,7 @@ function onListening() {
     : 'port ' + addr.port;
 
   // Get the base URL for the application
-  var baseUrl = 'https://wild-red-clownfish-tam.cyclic.app'
+  var baseUrl = 'https://wild-red-clownfish-tam.cyclic.app'; // Replace with your deployment URL
 
   debug('Listening on ' + baseUrl);
-}
-
-function getBaseUrl() {
-  var isLocalhost = process.env.NODE_ENV === 'development';
-  if (isLocalhost) {
-    return 'https://wild-red-clownfish-tam.cyclic.app';
-  } else {
-    return 'https://wild-red-clownfish-tam.cyclic.app'; // Replace with your deployment URL
-  }
 }
