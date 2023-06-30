@@ -88,7 +88,7 @@ function getBaseUrl() {
   if (isLocalhost) {
     return 'http://localhost:' + port;
   } else {
-    return 'https://example.com'; // Replace with your deployment URL
+    return 'https://wild-red-clownfish-tam.cyclic.app'; // Replace with your deployment URL
   }
 }
 
