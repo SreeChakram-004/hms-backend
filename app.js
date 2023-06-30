@@ -51,6 +51,7 @@ app.use(passport.session());
 
 // Google OAuth login route
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('https://wild-red-clownfish-tam.cyclic.app/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 // router.get("/auth/google",
 //   // (req, res, next) => {
 //   //   req.session.google_oauth2_state = Math.random().toString(36).substring(2);
@@ -65,6 +66,24 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 
 // Google OAuth callback route
 app.get('/auth/google/callback', passport.authenticate('google',{ session: false }), (req, res) => {
+  // Generate JWT token
+  const accessToken = jwt.sign({ email: req.user.email, password: 'password' }, jwtSecret, { expiresIn: '7d' });
+  const refreshToken = jwt.sign({ email: req.user.email, password: 'password' }, jwtSecret, { expiresIn: '7d' });
+
+  // Return the tokens as a JSON response
+  res.json({
+    status: true,
+    data: {
+      token_type: 'Bearer',
+      expires_in: '7d',
+      access_token: accessToken,
+      refresh_token: refreshToken
+    }
+  });
+
+});
+
+app.get('https://wild-red-clownfish-tam.cyclic.app/auth/google/auth/google/callback', passport.authenticate('google',{ session: false }), (req, res) => {
   // Generate JWT token
   const accessToken = jwt.sign({ email: req.user.email, password: 'password' }, jwtSecret, { expiresIn: '7d' });
   const refreshToken = jwt.sign({ email: req.user.email, password: 'password' }, jwtSecret, { expiresIn: '7d' });
