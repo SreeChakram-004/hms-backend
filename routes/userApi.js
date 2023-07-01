@@ -12,6 +12,7 @@ const moment = require("moment");
 const { v4: uuidv4 } = require("uuid");
 // const { jwtSecret } = require("../config/auth");
 const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const salt = bcrypt.genSaltSync(10);
 
 const validator = require("email-validator");
@@ -55,11 +56,13 @@ router.post("/create", verifyUser, async (req, res) => {
       return res.status(409).json({ message: "Email already exists" });
     }
 
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const newUser = await User.create({
       hotel_name: user.hotel_name,
       email: email,
       is_active: is_active,
-      password: password,
+      password: hashedPassword,
       uuid: uuidv4(),
       is_verified: moment().format("YYYY-MM-DD hh:mm:ss"),
       is_active: false,
