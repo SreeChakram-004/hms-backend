@@ -87,24 +87,37 @@ router.get("/all", verifyUser, async (req, res) => {
     });
 
     const { departmentName, page, limit } = req.query;
-
     const departmentOptions = {
       include: [
         {
           model: User,
-          // through: {
-            attributes: {
-              exclude: ["password", "favourite_pet", "favorite_book","DepartmentUser"], // Specify the fields to exclude
-            },
-          // },
+          attributes: {
+            exclude: ["password", "favourite_pet", "favorite_book"],
+          },
           where: { hotel_name: { [Op.eq]: user.hotel_name } },
         },
       ],
-      exclude: [{
-        model: DepartmentUser
-      }],
+      exclude: [{ model: DepartmentUser }],
       order: [["createdAt", "DESC"]],
     };
+
+    // const departmentOptions = {
+    //   include: [
+    //     {
+    //       model: User,
+    //       // through: {
+    //         attributes: {
+    //           exclude: ["password", "favourite_pet", "favorite_book","DepartmentUser"], // Specify the fields to exclude
+    //         },
+    //       // },
+    //       where: { hotel_name: { [Op.eq]: user.hotel_name } },
+    //     },
+    //   ],
+    //   exclude: [{
+    //     model: DepartmentUser
+    //   }],
+    //   order: [["createdAt", "DESC"]],
+    // };
 
     const totalCount = await Department.count(departmentOptions);
 
