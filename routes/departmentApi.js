@@ -94,7 +94,7 @@ router.get("/all", verifyUser, async (req, res) => {
           model: User,
           // through: {
             attributes: {
-              exclude: ["password", "favourite_pet", "favorite_book"], // Specify the fields to exclude
+              exclude: ["password", "favourite_pet", "favorite_book","DepartmentUser"], // Specify the fields to exclude
             },
           // },
           where: { hotel_name: { [Op.eq]: user.hotel_name } },
