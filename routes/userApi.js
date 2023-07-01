@@ -77,7 +77,7 @@ router.post("/create", verifyUser, async (req, res) => {
       status: true,
       user: newUser,
     });
-  } catch (error) {
+  } catch (err) {
     if (err.details) {
       return res
         .status(400)
@@ -209,7 +209,7 @@ router.post("/update/:userId", verifyUser, async (req, res) => {
       status: true,
       message: "Records updated successfully",
     });
-  } catch (error) {
+  } catch (err) {
     if (err.details) {
       return res
         .status(400)
@@ -241,7 +241,7 @@ router.post("/delete/:userId", verifyUser, async (req, res) => {
         status: true,
         message: "Record deleted successfully",
       });
-    } catch (error) {
+    } catch (err) {
       if (err.details) {
         return res
           .status(400)
