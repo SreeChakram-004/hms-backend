@@ -25,7 +25,7 @@ const verifyUser = require("../middlewares/verifyUser");
 
 //user
 router.post("/create", verifyUser, async (req, res) => {
-  const { email, password ,is_active } = req.body;
+  const { email, password, is_active } = req.body;
   try {
     const userEmail = req.user.email;
     const user = await User.findOne({
@@ -35,17 +35,15 @@ router.post("/create", verifyUser, async (req, res) => {
     });
 
     let assignedRoleId = req.body.roleId;
-    if (user.dataValues.Roles[0].dataValues.id === 1) {
-      assignedRoleId = 2 || 3;
-    } else if (user.dataValues.Roles[0].dataValues.id === 2) {
-      assignedRoleId = 3;
+    if (user.Roles[0].id === 1) {
+      assignedRoleId = [2, 3];
+    } else if (user.Roles[0].id === 2) {
+      assignedRoleId = [3];
     } else {
       return res.status(501).json({ message: "Invalid Access" });
     }
 
     const validateEmail = validator.validate(email);
-    (validateEmail);
-
     if (!validateEmail) {
       return res.status(400).json({ message: "Invalid email address" });
     }
@@ -65,13 +63,16 @@ router.post("/create", verifyUser, async (req, res) => {
       password: hashedPassword,
       uuid: uuidv4(),
       is_verified: moment().format("YYYY-MM-DD hh:mm:ss"),
-      is_active: false,
     });
 
-    let role = await RoleUser.create({
-      userId: newUser.id,
-      roleId: assignedRoleId,
-    });
+    await Promise.all(
+      assignedRoleId.map((roleId) => {
+        return RoleUser.create({
+          userId: newUser.id,
+          roleId: roleId,
+        });
+      })
+    );
 
     res.json({
       status: true,
@@ -90,6 +91,7 @@ router.post("/create", verifyUser, async (req, res) => {
     }
   }
 });
+
 
 router.get("/all", verifyUser, async (req, res) => {
   try {
