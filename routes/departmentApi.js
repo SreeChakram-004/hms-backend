@@ -92,11 +92,11 @@ router.get("/all", verifyUser, async (req, res) => {
       include: [
         {
           model: User,
-          through: {
+          // through: {
             attributes: {
               exclude: ["password", "favourite_pet", "favorite_book"], // Specify the fields to exclude
             },
-          },
+          // },
           where: { hotel_name: { [Op.eq]: user.hotel_name } },
         },
       ],
@@ -223,10 +223,7 @@ router.post("/delete/:departmentId", verifyUser, async (req, res) => {
       include: [{ model: Role, through: { attributes: [] } }],
     });
 
-    if (
-      user.dataValues.Roles[0].dataValues.id === 1 ||
-      user.dataValues.Roles[0].dataValues.id === 2
-    ) {
+    if (user.dataValues.Roles[0].dataValues.id === 1 || user.dataValues.Roles[0].dataValues.id === 2) {
       const department = await Department.findByPk(departmentId);
 
       if (!department) {
