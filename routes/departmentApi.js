@@ -94,12 +94,14 @@ router.get("/all", verifyUser, async (req, res) => {
           attributes: {
             exclude: ["password", "favourite_pet", "favorite_book"],
           },
+          through: { attributes: [] },
           where: { hotel_name: { [Op.eq]: user.hotel_name } },
         },
       ],
       exclude: [{ model: DepartmentUser }],
       order: [["createdAt", "DESC"]],
     };
+    
 
     // const departmentOptions = {
     //   include: [
