@@ -117,13 +117,7 @@ router.get("/all", verifyUser, async (req, res) => {
           },
         },
       ],
-      where: {
-        [Op.or]: [
-          { name: { [Op.like]: `%${search || ""}%` } },
-          { "$User.userName$": { [Op.like]: `%${search || ""}%` } },
-        ],
-      },
-      exclude: [{ model: DepartmentUser }],
+      exclude: [{ model: DepartmentUser}],
       order: [["createdAt", "DESC"]],
     };
 
