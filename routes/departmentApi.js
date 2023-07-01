@@ -100,6 +100,9 @@ router.get("/all", verifyUser, async (req, res) => {
           where: { hotel_name: { [Op.eq]: user.hotel_name } },
         },
       ],
+      exclude: [{
+        model: DepartmentUser
+      }],
       order: [["createdAt", "DESC"]],
     };
 
