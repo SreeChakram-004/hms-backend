@@ -87,6 +87,22 @@ router.get("/all", verifyUser, async (req, res) => {
     });
 
     const { search, page, limit } = req.query;
+    // const departmentOptions = {
+    //   include: [
+    //     {
+    //       model: User,
+    //       attributes: {
+    //         exclude: ["password", "favourite_pet", "favorite_book"],
+    //       },
+    //       through: { attributes: [] },
+    //       where: { hotel_name: { [Op.eq]: user.hotel_name } },
+    //     },
+    //   ],
+    //   exclude: [{ model: DepartmentUser }],
+    //   order: [["createdAt", "DESC"]],
+    // };
+    
+
     const departmentOptions = {
       include: [
         {
@@ -126,87 +142,24 @@ router.get("/all", verifyUser, async (req, res) => {
 
     res.json({
       status: true,
-     
-
-
-// router.get("/all", verifyUser, async (req, res) => {
-//   try {
-//     // Check if the logged-in user has the necessary access rights
-//     const userEmail = req.user.email;
-//     const user = await User.findOne({
-//       where: { email: userEmail },
-//       attributes: { exclude: ["password", "favourite_pet", "favorite_book"] },
-//       include: [{ model: Role, through: { attributes: [] } }],
-//     });
-
-//     const { departmentName, page, limit } = req.query;
-//     const departmentOptions = {
-//       include: [
-//         {
-//           model: User,
-//           attributes: {
-//             exclude: ["password", "favourite_pet", "favorite_book"],
-//           },
-//           through: { attributes: [] },
-//           where: { hotel_name: { [Op.eq]: user.hotel_name } },
-//         },
-//       ],
-//       exclude: [{ model: DepartmentUser }],
-//       order: [["createdAt", "DESC"]],
-//     };
-    
-
-//     // const departmentOptions = {
-//     //   include: [
-//     //     {
-//     //       model: User,
-//     //       // through: {
-//     //         attributes: {
-//     //           exclude: ["password", "favourite_pet", "favorite_book","DepartmentUser"], // Specify the fields to exclude
-//     //         },
-//     //       // },
-//     //       where: { hotel_name: { [Op.eq]: user.hotel_name } },
-//     //     },
-//     //   ],
-//     //   exclude: [{
-//     //     model: DepartmentUser
-//     //   }],
-//     //   order: [["createdAt", "DESC"]],
-//     // };
-
-//     const totalCount = await Department.count(departmentOptions);
-
-//     // Pagination
-//     const pageNumber = parseInt(page) || 1;
-//     const pageSize = parseInt(limit) || totalCount;
-//     const totalPages = Math.ceil(totalCount / pageSize);
-//     const offset = (pageNumber - 1) * pageSize;
-
-//     departmentOptions.offset = offset;
-//     departmentOptions.limit = pageSize;
-
-//     const departments = await Department.findAll(departmentOptions);
-
-//     res.json({
-//       status: true,
-//       departments,
-//       totalCount,
-//       totalPages,
-//       currentPage: pageNumber,
-//     });
-//   } catch (err) {
-//     if (err.details) {
-//       return res
-//         .status(400)
-//         .send({ status: false, message: err.details[0].message });
-//     } else {
-//       return res.status(500).send({
-//         status: false,
-//         message: err.message ? err.message : "Internal Server Error.",
-//       });
-//     }
-//   }
-// });
+      departments,
+      totalCount,
+      totalPages,
+      currentPage: pageNumber,
+    });
+  } catch (err) {
+    if (err.details) {
+      return res
+        .status(400)
+        .send({ status: false, message: err.details[0].message });
+    } else {
+      return res.status(500).send({
+        status: false,
+        message: err.message ? err.message : "Internal Server Error.",
+      });
+    }
+  }
+});
 
 router.get("/filter", verifyUser, async (req, res) => {
   try {
