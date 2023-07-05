@@ -228,7 +228,7 @@ router.post('/user/:id',verifyUser, async (req, res) => {
     await user.save();
 
     res.json({ status: true, message: 'User updated successfully' });
-  } catch (error) {
+  } catch (err) {
     if (err.details) {
       return res
         .status(400)
